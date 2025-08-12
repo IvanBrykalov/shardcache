@@ -1,0 +1,71 @@
+run:
+  timeout: 5m
+  tests: true
+  # auto = GOMAXPROCS
+  concurrency: 0            
+  allow-parallel-runners: true
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - revive
+    - ineffassign
+    - gosimple
+    - errcheck
+    - gofmt
+    - goimports
+    - misspell
+    - unparam
+    - errorlint
+    - gocritic
+    - nolintlint
+  disable:
+    - unused
+
+linters-settings:
+  revive:
+    rules:
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: early-return
+      - name: empty-lines
+      - name: var-naming
+      - name: import-shadowing
+  misspell:
+    locale: US
+  gocritic:
+    disabled-checks:
+      - hugeParam
+      - unnamedResult
+  errcheck:
+    exclude-functions:
+
+issues:
+  exclude-use-default: false
+  exclude-rules:
+    - path: ^examples/
+      linters:
+        - errcheck
+        - revive
+        - gocritic
+        - gosec
+    - path: ^cmd/bench/
+      linters:
+        - errcheck
+        - gosec
+    - path: _test\.go$
+      linters:
+        - errcheck
+        - gocritic
+        - revive
+        - dupword
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  formats:
+    - format: colored-line-number
+    - format: checkstyle
+      path: ./lint-report.xml

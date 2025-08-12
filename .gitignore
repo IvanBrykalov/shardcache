@@ -1,0 +1,11 @@
+# Binaries / test artifacts
+*.out
+*.test
+coverage.out
+bin/
+dist/
+
+# Editors/OS
+.vscode/
+.idea/
+.DS_Store
