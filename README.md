@@ -1,4 +1,7 @@
-[![CI](https://github.com/IvanBrykalov/lru/actions/workflows/ci.yml/badge.svg)](https://github.com/IvanBrykalov/lru/actions/workflows/ci.yml)
+[![CI](https://github.com/IvanBrykalov/shardcache/actions/workflows/ci.yml/badge.svg)](https://github.com/IvanBrykalov/shardcache/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/IvanBrykalov/shardcache/cache.svg)](https://pkg.go.dev/github.com/IvanBrykalov/shardcache/cache)
+[![Release](https://img.shields.io/github/v/release/IvanBrykalov/shardcache?display_name=tag&sort=semver)](https://github.com/IvanBrykalov/shardcache/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## LRU — Sharded in-memory cache for Go (LRU / 2Q)
 High-performance in-memory cache for Go featuring:
@@ -19,7 +22,7 @@ ___
 
 ## Install
 ```
-go get github.com/IvanBrykalov/shardcache/cache@latest
+go get github.com/IvanBrykalov/shardcache/cache@v0.1.0
 ```
 ```
 import "github.com/IvanBrykalov/shardcache/cache"
