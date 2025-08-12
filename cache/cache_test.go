@@ -99,7 +99,7 @@ func TestCache_GetOrLoad_Singleflight(t *testing.T) {
 
 	c := New[string, string](Options[string, string]{
 		Capacity: 64,
-		Loader: func(ctx context.Context, k string) (string, error) {
+		Loader: func(_ context.Context, k string) (string, error) {
 			atomic.AddInt64(&calls, 1)
 			time.Sleep(5 * time.Millisecond) // simulate I/O
 			return "v:" + k, nil

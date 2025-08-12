@@ -1,14 +1,16 @@
 package cache
 
-// NoopMetrics is a drop-in Metrics implementation that does nothing.
-// It is safe for concurrent use and intended as the default when
-// no observability backend is configured.
+// NoopMetrics is a Metrics implementation that does nothing.
 type NoopMetrics struct{}
 
-func (NoopMetrics) Hit()                         {}
-func (NoopMetrics) Miss()                        {}
-func (NoopMetrics) Evict(EvictReason)            {}
-func (NoopMetrics) Size(entries int, cost int64) {}
+// Hit records a cache hit. NoopMetrics ignores the call.
+func (NoopMetrics) Hit() {}
 
-// Ensure NoopMetrics implements the Metrics interface at compile time.
-var _ Metrics = NoopMetrics{}
+// Miss records a cache miss. NoopMetrics ignores the call.
+func (NoopMetrics) Miss() {}
+
+// Evict records an eviction reason. NoopMetrics ignores the call.
+func (NoopMetrics) Evict(EvictReason) {}
+
+// Size reports current resident size and cost. NoopMetrics ignores the call.
+func (NoopMetrics) Size(_ int, _ int64) {}

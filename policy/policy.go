@@ -1,3 +1,4 @@
+// Package policy defines the minimal interfaces for pluggable eviction policies.
 package policy
 
 // Node is the minimal contract a cache entry must satisfy for a policy.

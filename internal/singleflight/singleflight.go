@@ -1,3 +1,4 @@
+// Package singleflight provides per-key request coalescing for concurrent calls.
 package singleflight
 
 import (

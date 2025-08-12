@@ -2,7 +2,6 @@ package cache
 
 import (
 	"math/rand"
-	"runtime"
 	"strconv"
 	"sync/atomic"
 	"testing"
@@ -16,7 +15,7 @@ func benchmarkMix(b *testing.B, readsPct int) {
 	c := New[string, string](Options[string, string]{
 		Capacity: 100_000,
 	})
-	defer c.Close()
+	b.Cleanup(func() { _ = c.Close() })
 
 	// Preload half the capacity to get a realistic hit-rate.
 	for i := 0; i < 50_000; i++ {
@@ -56,7 +55,7 @@ func benchmarkMixInt(b *testing.B, readsPct int) {
 	c := New[int, int](Options[int, int]{
 		Capacity: 100_000,
 	})
-	defer c.Close()
+	b.Cleanup(func() { _ = c.Close() })
 
 	for i := 0; i < 50_000; i++ {
 		c.Set(i, 1)
@@ -85,6 +84,3 @@ func benchmarkMixInt(b *testing.B, readsPct int) {
 
 func BenchmarkCache_IntKeys_90r10w(b *testing.B) { benchmarkMixInt(b, 90) }
 func BenchmarkCache_IntKeys_50r50w(b *testing.B) { benchmarkMixInt(b, 50) }
-
-// Helper: keep for parity with the original code (used in examples elsewhere).
-func runtimeProc() int { return runtime.GOMAXPROCS(0) }

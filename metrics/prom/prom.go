@@ -1,3 +1,4 @@
+// Package prom provides a Prometheus adapter that implements cache.Metrics.
 package prom
 
 import (

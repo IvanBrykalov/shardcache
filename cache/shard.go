@@ -34,10 +34,10 @@ type shard[K comparable, V any] struct {
 
 // newShard initializes a shard with per-shard capacity, policy factory, and options.
 // maxCost is derived by splitting opt.MaxCost evenly across shards.
-func newShard[K comparable, V any](cap int, pol policy.Policy[K, V], opt Options[K, V]) *shard[K, V] {
+func newShard[K comparable, V any](capacity int, pol policy.Policy[K, V], opt Options[K, V]) *shard[K, V] {
 	s := &shard[K, V]{
-		m:   make(map[K]*node[K, V], cap),
-		cap: cap,
+		m:   make(map[K]*node[K, V], capacity),
+		cap: capacity,
 		opt: opt,
 	}
 

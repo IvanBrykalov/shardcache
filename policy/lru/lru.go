@@ -1,4 +1,4 @@
-// policy/lru/lru.go
+// Package lru implements the LRU eviction policy.
 package lru
 
 import "github.com/IvanBrykalov/lru/policy"
@@ -34,4 +34,4 @@ func (p *lru[K, V]) OnGet(n policy.Node[K, V]) { p.h.MoveToFront(n) }
 func (p *lru[K, V]) OnUpdate(n policy.Node[K, V]) { p.h.MoveToFront(n) }
 
 // OnRemove is a no-op for pure LRU (nothing to clean up in policy state).
-func (p *lru[K, V]) OnRemove(n policy.Node[K, V]) { /* no-op */ }
+func (p *lru[K, V]) OnRemove(_ policy.Node[K, V]) {}

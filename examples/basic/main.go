@@ -1,3 +1,4 @@
+// Command basic demonstrates minimal cache usage.
 package main
 
 import (
@@ -13,7 +14,7 @@ func main() {
 		Capacity:   5, // entry count limit
 		DefaultTTL: 0, // no default TTL
 	})
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// Add: insert only if key is absent (no update). Returns false on duplicate.
 	fmt.Println("Add a=1  ->", c.Add("a", "1")) // true

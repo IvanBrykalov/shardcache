@@ -1,3 +1,4 @@
+// Command http_metrics exposes Prometheus metrics while exercising the cache.
 package main
 
 import (
@@ -20,7 +21,7 @@ func main() {
 		Capacity: 10000,
 		Metrics:  m,
 	})
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// Generate a tiny bit of traffic so counters are non-zero.
 	c.Set("a", []byte("1"))

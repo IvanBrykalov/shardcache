@@ -1,4 +1,6 @@
+// Command bench runs a synthetic workload against the cache and exposes optional pprof/Prometheus endpoints.
 package main
+
 
 import (
 	"context"
@@ -74,7 +76,7 @@ func main() {
 		log.Fatalf("unknown policy: %q (use lru or 2q)", *policy)
 	}
 	c := cache.New[string, string](opt)
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	// ---- Preload half capacity to get a realistic hit-rate ----
 	pl := *preload

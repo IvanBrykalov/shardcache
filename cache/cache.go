@@ -40,7 +40,7 @@ type cache[K comparable, V any] struct {
 //   - nil Metrics  -> NoopMetrics
 //   - nil Policy   -> LRU
 //   - Shards <= 0  -> auto, rounded up to the next power of two
-func New[K comparable, V any](opt Options[K, V]) *cache[K, V] {
+func New[K comparable, V any](opt Options[K, V]) Cache[K, V] {
 	if opt.Capacity <= 0 {
 		panic("Capacity must be > 0")
 	}
@@ -71,6 +71,7 @@ func New[K comparable, V any](opt Options[K, V]) *cache[K, V] {
 		cs[i] = newShard[K, V](perShardCap, opt.Policy, opt)
 	}
 
+	// return pointer-to-impl as the interface (avoids unexported-return lint)
 	return &cache[K, V]{
 		shards: cs,
 		hash:   util.Fnv64a[K], // fast non-crypto hash for sharding

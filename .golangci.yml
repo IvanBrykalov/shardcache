@@ -1,3 +1,5 @@
+version: 2
+
 run:
   timeout: 3m
 
@@ -7,10 +9,11 @@ linters:
     - staticcheck
     - revive
     - ineffassign
-    - gosimple
     - errcheck
 
 linters-settings:
+  staticcheck:
+    checks: ["all"]
   errcheck:
     exclude-functions: []
 

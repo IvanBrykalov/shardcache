@@ -1,3 +1,5 @@
+// Package util contains internal helpers (hashing, sharding, padding).
+//revive:disable:var-naming  // allow 'util' as an internal helpers package name
 package util
 
 // IsPowerOfTwo reports whether x is a power of two (> 0).

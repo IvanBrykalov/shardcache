@@ -22,12 +22,12 @@ func FuzzCache_SetGetRemove(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, k, v string) {
 		// Cap lengths to keep memory bounded during fuzzing.
-		const max = 1 << 12 // 4096
-		if len(k) > max {
-			k = k[:max]
+		const limit  = 1 << 12 // 4096
+		if len(k) > limit  {
+			k = k[:limit ]
 		}
-		if len(v) > max {
-			v = v[:max]
+		if len(v) > limit  {
+			v = v[:limit ]
 		}
 
 		c := New[string, string](Options[string, string]{Capacity: 16})

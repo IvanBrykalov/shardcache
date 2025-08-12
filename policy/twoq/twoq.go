@@ -1,4 +1,4 @@
-// policy/twoq/twoq.go
+// Package twoq implements the 2Q eviction policy (A1in/Am with A1out ghosts).
 package twoq
 
 import (

@@ -55,7 +55,7 @@ func TestRace_GetOrLoad(t *testing.T) {
 
 	c := New[string, string](Options[string, string]{
 		Capacity: 1024,
-		Loader: func(ctx context.Context, k string) (string, error) {
+		Loader: func(_ context.Context, k string) (string, error) {
 			atomic.AddInt64(&calls, 1)
 			time.Sleep(2 * time.Millisecond) // simulate I/O
 			return "v:" + k, nil

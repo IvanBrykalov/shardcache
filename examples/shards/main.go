@@ -1,3 +1,4 @@
+// Command shards demonstrates sharded cache usage with the 2Q policy.
 package main
 
 import (
@@ -28,7 +29,7 @@ func main() {
 		Shards:   shards,
 		Policy:   twoq.New[string, string](a1in, ghost), // per-shard 2Q sizing
 	})
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
 	var wg sync.WaitGroup
 	start := time.Now()
