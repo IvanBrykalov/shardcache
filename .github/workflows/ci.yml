@@ -1,65 +1,53 @@
-name: ci
+name: CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   test:
-    name: Go ${{ matrix.go }} (stable)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         go: ['1.24.x']
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
-          check-latest: false
-          cache: true
-          cache-dependency-path: go.sum
+          check-latest: true
 
-      - name: go vet
+      - name: Cache Go build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: ${{ runner.os }}-go-${{ matrix.go }}-
+
+      - name: Vet
         run: go vet ./...
 
-      - name: golangci-lint
+      - name: Test (race + coverage)
+        run: go test ./... -race -coverprofile=coverage.out
+
+      - name: Lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: v2.3.1
+          version: v1.59.1
           args: --timeout=5m
-          skip-cache: false
-
-      - name: test
-        run: go test ./... -race -covermode=atomic -coverprofile=coverage.out
-
-      - name: upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-${{ matrix.go }}
-          path: coverage.out
-          if-no-files-found: error
-
-  
-  test-rc:
-  continue-on-error: true
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-go@v5
-      with:
-        go-version: '1.25.0-rc.1'
-        cache: true
-        cache-dependency-path: go.sum
-    - run: go build ./...
-    - run: go test ./... -run=^$ || true
