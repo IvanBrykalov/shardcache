@@ -1,4 +1,4 @@
-version: 2
+version: "2"
 
 run:
   timeout: 3m
@@ -11,13 +11,15 @@ linters:
     - ineffassign
     - errcheck
 
-linters-settings:
-  staticcheck:
-    checks: ["all"]
-  errcheck:
-    exclude-functions: []
+  settings:
+    staticcheck:
+      checks: ["all"]
+    errcheck:
+      exclude-functions: []
+
+  exclusions:
+    presets: []
 
 issues:
-  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
