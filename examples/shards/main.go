@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/IvanBrykalov/lru/cache"
-	"github.com/IvanBrykalov/lru/policy/twoq"
+	"github.com/IvanBrykalov/shardcache/cache"
+	"github.com/IvanBrykalov/shardcache/policy/twoq"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	a1in := perShardCap / 4  // ~25% of shard capacity
 	ghost := perShardCap / 2 // ~50% of shard capacity
 
-	c := cache.New[string, string](cache.Options[string, string]{
+	c := shardcache.New[string, string](shardcache.Options[string, string]{
 		Capacity: capacity,
 		Shards:   shards,
 		Policy:   twoq.New[string, string](a1in, ghost), // per-shard 2Q sizing

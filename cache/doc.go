@@ -1,4 +1,4 @@
-// Package cache provides a fast, generic, sharded in-memory cache with
+// Package shardcache provides a fast, generic, sharded in-memory cache with
 // pluggable eviction policies (LRU by default), per-entry TTL, optional
 // singleflight loading, lightweight metrics hooks, and cost-based capacity.
 //
@@ -83,4 +83,4 @@
 //
 // See package cache/options.go for all available Options fields and package
 // policy for the Policy/Hooks interfaces used to implement custom strategies.
-package cache
+package shardcache

@@ -4,7 +4,7 @@ package twoq
 import (
 	"container/list"
 
-	"github.com/IvanBrykalov/lru/policy"
+	"github.com/IvanBrykalov/shardcache/policy"
 )
 
 // twoQ implements the 2Q eviction policy.

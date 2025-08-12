@@ -1,16 +1,16 @@
-// Command basic demonstrates minimal cache usage.
+// Command basic using the cache.
 package main
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/IvanBrykalov/lru/cache"
+	"github.com/IvanBrykalov/shardcache/cache"
 )
 
 func main() {
 	// By default the eviction policy is LRU.
-	c := cache.New[string, string](cache.Options[string, string]{
+	c := shardcache.New[string, string](shardcache.Options[string, string]{
 		Capacity:   5, // entry count limit
 		DefaultTTL: 0, // no default TTL
 	})

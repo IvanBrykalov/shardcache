@@ -1,7 +1,6 @@
 // Command bench runs a synthetic workload against the cache and exposes optional pprof/Prometheus endpoints.
 package main
 
-
 import (
 	"context"
 	"flag"
@@ -16,9 +15,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/IvanBrykalov/lru/cache"
-	pmet "github.com/IvanBrykalov/lru/metrics/prom"
-	"github.com/IvanBrykalov/lru/policy/twoq"
+	"github.com/IvanBrykalov/shardcache/cache"
+	pmet "github.com/IvanBrykalov/shardcache/metrics/prom"
+	"github.com/IvanBrykalov/shardcache/policy/twoq"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
@@ -61,7 +60,7 @@ func main() {
 	}()
 
 	// ---- Build cache ----
-	opt := cache.Options[string, string]{
+	opt := shardcache.Options[string, string]{
 		Capacity: *capacity,
 		Shards:   *shards,
 		Metrics:  metrics,
@@ -75,7 +74,7 @@ func main() {
 	default:
 		log.Fatalf("unknown policy: %q (use lru or 2q)", *policy)
 	}
-	c := cache.New[string, string](opt)
+	c := shardcache.New[string, string](opt)
 	defer func() { _ = c.Close() }()
 
 	// ---- Preload half capacity to get a realistic hit-rate ----

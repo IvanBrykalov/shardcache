@@ -1,11 +1,11 @@
-package cache
+package shardcache
 
 import (
 	"sync"
 	"time"
 
-	"github.com/IvanBrykalov/lru/internal/util"
-	"github.com/IvanBrykalov/lru/policy"
+	"github.com/IvanBrykalov/shardcache/internal/util"
+	"github.com/IvanBrykalov/shardcache/policy"
 )
 
 // shard is an independent partition of the cache with its own lock, map,

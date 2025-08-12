@@ -1,4 +1,4 @@
-package cache
+package shardcache
 
 // node is an intrusive doubly linked list element owned by a shard.
 // It stores the key/value alongside list links and metadata used by

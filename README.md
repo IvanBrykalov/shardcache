@@ -19,64 +19,78 @@ ___
 
 ## Install
 ```
-go get github.com/IvanBrykalov/lru
+go get github.com/IvanBrykalov/shardcache/cache@latest
 ```
 ```
-import "github.com/IvanBrykalov/lru/cache"
+import "github.com/IvanBrykalov/shardcache/cache"
 ```
 ___
 
 ## Quick start
 ```
-c := cache.New[string, []byte](cache.Options[string, []byte]{
-    Capacity: 100_000,      // entry count limit
-    // Policy: nil           // nil → LRU by default
-})
+package main
 
-c.Set("k", []byte("v"))
-if v, ok := c.Get("k"); ok {
-    fmt.Println(string(v))  // "v"
+import (
+	"fmt"
+	"time"
+
+	"github.com/IvanBrykalov/shardcache/cache"
+)
+
+func main() {
+	c := cache.New[string, string](cache.Options[string, string]{
+		Capacity:   1000,
+		DefaultTTL: 0, // no default TTL
+	})
+	defer c.Close()
+
+	c.Set("k", "v")
+	if v, ok := c.Get("k"); ok {
+		fmt.Println(v) // "v"
+	}
+
+	c.SetWithTTL("tmp", "x", 5*time.Second)
+	c.Remove("k")
+	fmt.Println("size:", c.Len())
 }
-
-c.SetWithTTL("tmp", []byte("x"), 5*time.Second)
-c.Remove("k")
-fmt.Println("size:", c.Len())
 ```
 ## Fetch on miss (singleflight)
 ```
 c := cache.New[string, string](cache.Options[string, string]{
-    Capacity: 1024,
-    Loader: func(ctx context.Context, k string) (string, error) {
-        // fetch from DB/HTTP/etc
-        return "v:" + k, nil
-    },
+	Capacity: 1024,
+	Loader: func(ctx context.Context, k string) (string, error) {
+		// fetch from DB/HTTP/etc
+		return "v:" + k, nil
+	},
 })
 
 v, err := c.GetOrLoad(ctx, "user:42") // concurrent requests are coalesced
 ```
+
 ## Options
 ```
 type Options[K comparable, V any] struct {
-    Capacity int                 // entry count limit
-    Shards   int                 // 0 = auto (power of two)
-    Policy   policy.Policy[K,V]  // nil = LRU
+	Capacity int                 // entry count limit
+	Shards   int                 // 0 = auto (power of two)
+	Policy   policy.Policy[K, V] // nil = LRU
 
-    // TTL / SWR
-    DefaultTTL time.Duration     // 0 = no TTL
-    SWR        time.Duration     // serve-stale-while-revalidate (optional)
+	// TTL / SWR
+	DefaultTTL time.Duration // 0 = no TTL
+	SWR        time.Duration // serve-stale-while-revalidate (optional)
 
-    // Cost limiting
-    Cost    func(v V) int        // nil = all equal
-    MaxCost int64                // total cost limit (>0 enables)
+	// Cost limiting
+	Cost    func(v V) int // nil = all equal
+	MaxCost int64         // total cost limit (>0 enables)
 
-    // Fetch on miss
-    Loader  func(ctx context.Context, k K) (V, error)
+	// Fetch on miss
+	Loader func(ctx context.Context, k K) (V, error)
 
-    // Observability
-    Metrics Metrics
-    OnEvict func(k K, v V, reason EvictReason)
+	// Observability
+	Metrics cache.Metrics
+	OnEvict func(k K, v V, reason cache.EvictReason)
 
-    Clock   Clock                // testing clock
+	// Testing clock
+	Clock cache.Clock
 }
 ```
 ## API:
@@ -92,19 +106,22 @@ Close() error
 ```
 
 ## Eviction policies
-**LRU is the default**. Policies are pluggable via policy.Policy. Bundled:
+**LRU is the default**. Policies are pluggable via policy.Policy.Bundled:
 
-policy/lru — default LRU
+* policy/lru — default LRU
 
-policy/twoq — 2Q (attenuates “one-hit wonders”)
+* policy/twoq — 2Q (attenuates “one-hit wonders”)
 
 **Use 2Q**:
 ```
-import "github.com/IvanBrykalov/lru/policy/twoq"
+import (
+	"github.com/IvanBrykalov/shardcache/cache"
+	"github.com/IvanBrykalov/shardcache/policy/twoq"
+)
 
-c := cache.New[string,string](cache.Options[string,string]{
-    Capacity: 50_000,
-    Policy:   twoq.New[string,string](capIn=12_500, capGhost=25_000),
+c := cache.New[string, string](cache.Options[string, string]{
+	Capacity: 50_000,
+	Policy:   twoq.New[string, string](12_500, 25_000), // capIn≈25%, ghosts≈50%
 })
 ```
 *The policy interface & hooks (policy.Hooks) are public — you can implement your own (e.g., TinyLFU) without touching the core.*
@@ -113,21 +130,26 @@ c := cache.New[string,string](cache.Options[string,string]{
 Adapter lives in metrics/prom.
 ```
 import (
-    "net/http"
-    "github.com/IvanBrykalov/lru/cache"
-    pmet "github.com/IvanBrykalov/lru/metrics/prom"
-    "github.com/prometheus/client_golang/prometheus/promhttp"
+	"log"
+	"net/http"
+
+	"github.com/IvanBrykalov/shardcache/cache"
+	pmet "github.com/IvanBrykalov/shardcache/metrics/prom"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-m := pmet.New(nil, "lru", "demo", nil)
+func main() {
+	m := pmet.New(nil, "shardcache", "demo", nil)
 
-c := cache.New[string,string](cache.Options[string,string]{
-    Capacity: 10000,
-    Metrics:  m,
-})
+	c := cache.New[string, string](cache.Options[string, string]{
+		Capacity: 10000,
+		Metrics:  m,
+	})
+	defer c.Close()
 
-http.Handle("/metrics", promhttp.Handler())
-log.Fatal(http.ListenAndServe(":8080", nil))
+	http.Handle("/metrics", promhttp.Handler())
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 ```
 ## pprof
 Enable in any binary:

@@ -1,4 +1,4 @@
-package cache
+package shardcache
 
 // NoopMetrics is a Metrics implementation that does nothing.
 type NoopMetrics struct{}

@@ -1,6 +1,6 @@
 //go:build go1.18
 
-package cache
+package shardcache
 
 import (
 	"strings"

@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/IvanBrykalov/lru/cache"
-	"github.com/IvanBrykalov/lru/metrics/prom"
+	"github.com/IvanBrykalov/shardcache/cache"
+	"github.com/IvanBrykalov/shardcache/metrics/prom"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
@@ -17,7 +17,7 @@ func main() {
 	m := prom.New(nil, "lru", "demo", nil)
 
 	// Build a small cache and wire metrics.
-	c := cache.New[string, []byte](cache.Options[string, []byte]{
+	c := shardcache.New[string, []byte](shardcache.Options[string, []byte]{
 		Capacity: 10000,
 		Metrics:  m,
 	})

@@ -1,10 +1,10 @@
-package cache
+package shardcache
 
 import (
 	"context"
 	"time"
 
-	"github.com/IvanBrykalov/lru/policy"
+	"github.com/IvanBrykalov/shardcache/policy"
 )
 
 // EvictReason explains why an entry was removed.

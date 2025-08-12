@@ -2,7 +2,7 @@
 package prom
 
 import (
-	"github.com/IvanBrykalov/lru/cache"
+	"github.com/IvanBrykalov/shardcache/cache"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -75,7 +75,7 @@ func (a *Adapter) Hit() { a.hits.Inc() }
 func (a *Adapter) Miss() { a.misses.Inc() }
 
 // Evict increments the eviction counter with a reason label.
-func (a *Adapter) Evict(r cache.EvictReason) {
+func (a *Adapter) Evict(r shardcache.EvictReason) {
 	a.evicts.WithLabelValues(reason(r)).Inc()
 }
 
@@ -86,11 +86,11 @@ func (a *Adapter) Size(entries int, cost int64) {
 }
 
 // reason maps EvictReason to a stable label value.
-func reason(r cache.EvictReason) string {
+func reason(r shardcache.EvictReason) string {
 	switch r {
-	case cache.EvictTTL:
+	case shardcache.EvictTTL:
 		return "ttl"
-	case cache.EvictCapacity:
+	case shardcache.EvictCapacity:
 		return "capacity"
 	default:
 		return "policy"
@@ -98,4 +98,4 @@ func reason(r cache.EvictReason) string {
 }
 
 // Compile-time check: ensure Adapter implements cache.Metrics.
-var _ cache.Metrics = (*Adapter)(nil)
+var _ shardcache.Metrics = (*Adapter)(nil)

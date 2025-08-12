@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Install
 ```bash
-go get github.com/IvanBrykalov/lru@v0.1.0
+go get github.com/IvanBrykalov/shardcache/cache@v0.1.0
 ```
 
 ## Compatibility

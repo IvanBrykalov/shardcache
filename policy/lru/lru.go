@@ -1,7 +1,7 @@
 // Package lru implements the LRU eviction policy.
 package lru
 
-import "github.com/IvanBrykalov/lru/policy"
+import "github.com/IvanBrykalov/shardcache/policy"
 
 // lru is a classic "move-to-front" Least-Recently-Used policy.
 // It delegates list manipulation to policy.Hooks provided by the shard.

@@ -1,4 +1,4 @@
-module github.com/IvanBrykalov/lru
+module github.com/IvanBrykalov/shardcache
 
 go 1.24.1
 

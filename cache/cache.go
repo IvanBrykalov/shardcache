@@ -1,4 +1,4 @@
-package cache
+package shardcache
 
 import (
 	"context"
@@ -7,9 +7,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/IvanBrykalov/lru/internal/singleflight"
-	"github.com/IvanBrykalov/lru/internal/util"
-	"github.com/IvanBrykalov/lru/policy/lru"
+	"github.com/IvanBrykalov/shardcache/internal/singleflight"
+	"github.com/IvanBrykalov/shardcache/internal/util"
+	"github.com/IvanBrykalov/shardcache/policy/lru"
 )
 
 // ErrNoLoader is returned by GetOrLoad when no Loader was configured in Options.

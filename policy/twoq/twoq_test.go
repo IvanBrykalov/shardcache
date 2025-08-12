@@ -3,7 +3,7 @@ package twoq
 import (
 	"testing"
 
-	"github.com/IvanBrykalov/lru/policy"
+	"github.com/IvanBrykalov/shardcache/policy"
 )
 
 // --- test doubles (same shape as in LRU tests) ---
